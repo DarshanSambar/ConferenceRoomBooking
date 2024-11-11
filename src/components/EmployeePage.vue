@@ -11,11 +11,11 @@
             </select>
 
             <form @submit.prevent="handleSubmit" class="booking-form">
-                <input type="text" v-model="form.roomId" readonly placeholder="Room ID" class="form-input" />
-                <input type="text" v-model="form.roomName" readonly placeholder="Room Name" class="form-input" />
-                <input type="text" v-model="form.capacity" readonly placeholder="Capacity" class="form-input" />
-                <input type="text" v-model="form.location" readonly placeholder="Location" class="form-input" />
-                <input type="date" v-model="form.bookingDate" @change="handleDate" class="form-input" />
+                <input type="text" v-model="form.roomId" readonly placeholder="Room ID" class="form-input" required />
+                <input type="text" v-model="form.roomName" readonly placeholder="Room Name" class="form-input" required />
+                <input type="text" v-model="form.capacity" readonly placeholder="Capacity" class="form-input" required />
+                <input type="text" v-model="form.location" readonly placeholder="Location" class="form-input" required />
+                <input type="date" v-model="form.bookingDate" @change="handleDate" class="form-input" :min="currentDate" required />
 
                 <div class="time-inputs">
                     <div>
@@ -72,7 +72,9 @@ export default {
                 startTime: "",
                 endTime: ""
             },
-            bookedSlots: []
+            currentDate: new Date().toISOString().split("T")[0],
+            bookedSlots: [],
+            count: 0
         };
     },
     methods: {
@@ -81,7 +83,11 @@ export default {
 
             let result = await axios.get(`http://localhost:3000/rooms?id=${this.selectedRoom}`);
 
+            if (this.count == 1) {
+                this.handleDate()
+            }
             if (result.status === 200) {
+                this.count = 1;
                 let roomObj = result.data[0];
                 console.log(roomObj)
                 this.form.roomId = roomObj.id;
@@ -90,6 +96,7 @@ export default {
                 this.form.location = roomObj.location;
             }
         },
+
         async handleDate() {
             let result = await axios.get(`http://localhost:3000/bookings?roomId=${this.selectedRoom}&bookingDate=${this.form.bookingDate}`);
             alert("inside handleDate")
@@ -107,16 +114,42 @@ export default {
             }
             console.log(this.bookedSlots)
         },
+
         async handleSubmit() {
-            alert("clicked")
+            alert("clicked");
+
             if (this.form.endTime <= this.form.startTime) {
                 alert("End time must be later than start time.");
                 return;
             }
-            const isAvailable = await this.checkAvailability();
-            if (!isAvailable) return;
 
-            console.log("after checking")
+            const startTime = new Date(`1970-01-01T${this.form.startTime}:00`);
+            const endTime = new Date(`1970-01-01T${this.form.endTime}:00`);
+            const duration = (endTime - startTime) / (1000 * 60 * 60); // Duration in hours
+
+            if (duration < 1) {
+                alert("The booking must be for at least 1 hour.");
+                this.form.startTime = "",
+                    this.form.endTime = ""
+                return;
+            } else if (duration > 4) {
+                alert("The booking cannot exceed 4 hours.");
+                return;
+            }
+
+            const allowedStartTime = new Date(`1970-01-01T07:00:00`);
+            const allowedEndTime = new Date(`1970-01-01T21:00:00`);
+
+            if (startTime < allowedStartTime || endTime > allowedEndTime) {
+                alert("Booking must be between 7:00 AM and 9:00 PM.");
+                return;
+            }
+
+            const isAvailable = await this.checkAvailabilityWithBuffer(startTime, endTime);
+            if (!isAvailable) {
+                return; // Just return, don't reset the form
+            }
+
             try {
                 let result = await axios.post("http://localhost:3000/bookings", {
                     userId: this.userId,
@@ -129,16 +162,21 @@ export default {
                     startTime: this.form.startTime,
                     endTime: this.form.endTime
                 });
-                console.log(result)
+
                 if (result.status === 201) {
+                    console.log(this.bookedSlots)
                     alert("Booking created successfully!");
-                    this.handleDate();
+                    this.form.bookingDate = ""
+                    this.form.startTime = "";
+                    this.form.endTime = "";
+                    this.bookedSlots = []; // Clear booked slots
                 }
             } catch (error) {
                 alert("Failed to create booking. Please try again.");
             }
         },
-        async checkAvailability() {
+
+        async checkAvailabilityWithBuffer(startTime, endTime) {
             try {
                 let result = await axios.get(`http://localhost:3000/bookings`, {
                     params: {
@@ -150,6 +188,7 @@ export default {
                 if (result.data.length === 0) {
                     alert("Room is available for booking.");
                     this.bookedSlots = result.data.map(booking => ({
+                        bookingDate:booking.bookingDate,
                         startTime: booking.startTime,
                         endTime: booking.endTime
                     }));
@@ -157,43 +196,52 @@ export default {
                 }
 
                 this.bookedSlots = result.data.map(booking => ({
+                    bookingDate:booking.bookingDate,
                     startTime: booking.startTime,
                     endTime: booking.endTime
                 }));
 
-                let startTime = new Date(`1970-01-01T${this.bookings.startTime}:00`);
-                let endTime = new Date(`1970-01-01T${this.bookings.endTime}:00`);
-                let isOverlap = false;
+                const bufferTime = 10 * 60 * 1000;
 
                 for (let slot of this.bookedSlots) {
                     let slotStart = new Date(`1970-01-01T${slot.startTime}:00`);
                     let slotEnd = new Date(`1970-01-01T${slot.endTime}:00`);
 
+                    let slotEndWithBuffer = new Date(slotEnd.getTime() + bufferTime);
+                    let slotStartWithBuffer = new Date(slotStart.getTime() - bufferTime);
+
                     if (
-                        (startTime < slotEnd && startTime >= slotStart) ||
-                        (endTime > slotStart && endTime <= slotEnd) ||
-                        (startTime <= slotStart && endTime >= slotEnd)
+                        (startTime < slotEndWithBuffer && startTime >= slotStartWithBuffer) ||
+                        (endTime > slotStartWithBuffer && endTime <= slotEndWithBuffer) ||
+                        (startTime <= slotStartWithBuffer && endTime >= slotEndWithBuffer)
                     ) {
-                        isOverlap = true;
-                        alert(`Room is already booked from ${slot.startTime} to ${slot.endTime}`);
+                        alert(`Room is already booked or there's a buffer conflict of 10 min with another booking.`);
+                        this.startTime="",
+                        this.endTime=""
                         return false;
                     }
                 }
 
-                if (!isOverlap) {
-                    alert("Room is available for booking.");
-                }
+                alert("Room is available for booking.");
+                return true;
 
             } catch (error) {
                 console.error("Error checking room availability:", error);
                 alert("An error occurred. Please try again.");
+                return false;
             }
-        }
+        },
     },
+
     async mounted() {
+
+        const savedFormData = JSON.parse(localStorage.getItem('bookingFormData'));
+        if (savedFormData) {
+            this.form = savedFormData;
+        }
         let user = JSON.parse(localStorage.getItem("user-info"));
         this.userId = user[0].id;
-        this.userName = user[0].name
+        this.userName = user[0].name;
         let result = await axios.get("http://localhost:3000/rooms");
         if (result.status === 200) {
             this.rooms = result.data;

@@ -3,10 +3,10 @@
       <form v-on:submit.prevent="handleSignup" class="signup-form">
         <h2>Sign Up</h2>
   
-        <input type="text" placeholder="Enter name" required v-model="form.name" pattern="[A-Za-z]+" title="Name should contain at least one letter">
+        <input type="text" placeholder="Enter name" required v-model="form.name" v-on:change="handleChange" minlength="4">
 
         <input type="email" placeholder="Enter email" required v-model="form.email">
-        <input type="password" placeholder="Enter password" required v-model="form.password">
+        <input type="password" placeholder="Enter password" required v-model="form.password" minlength="8" maxlength="16">
   
         <button class="signup">Sign Up</button>
         <button type="button" id="login" v-on:click="handleLogin">Login</button>
@@ -32,6 +32,15 @@ import axios from 'axios';
         }
     },
     methods:{
+        handleChange()
+        {
+          
+          if(!isNaN(this.form.name))
+        {
+          alert("Enter atleast enter one letter in name field")
+          return
+        }
+        },
         async handleSignup()
         {
             if(this.form.name && this.form.password && this.form.email)

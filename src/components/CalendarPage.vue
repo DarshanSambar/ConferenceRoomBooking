@@ -122,7 +122,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 5px;
+    padding: 5px 0px;
     border-radius: 4px;
     background-color: #e1f5fe;
     color: #0277bd;

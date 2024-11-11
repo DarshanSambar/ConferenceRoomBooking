@@ -29,93 +29,171 @@
       "role": "Employee"
     },
     {
-      "id": "5",
-      "name": "ramesh",
-      "email": "cr7@gmail.com",
-      "password": "123",
-      "role": "Employee"
-    },
-    {
-      "id": 6,
-      "name": "ganesh",
-      "email": "ganesh@gmail.com",
-      "password": "123",
+      "id": 5,
+      "name": "virat",
+      "email": "virat@gmail.com",
+      "password": "virat123",
       "role": "Employee"
     }
   ],
   "rooms": [
     {
-      "id": "101",
+      "id": "ca1c",
       "roomName": "room101",
-      "capacity": "10",
-      "location": "mumbai",
-      "isAvailable": "true"
-    },
-    {
-      "id": "102",
-      "roomName": "room102",
-      "capacity": "10",
-      "location": "pune",
-      "isAvailable": "true"
-    },
-    {
-      "id": "103",
-      "roomName": "room103",
-      "capacity": "10",
-      "location": "banglore",
-      "isAvailable": "true"
-    },
-    {
-      "id": "104",
-      "roomName": "room104",
-      "capacity": "13",
+      "capacity": "14",
       "location": "Mumbai",
+      "date": "2024-11-11",
       "isAvailable": true
     },
     {
-      "id": "a579",
-      "roomName": "room107",
-      "capacity": "12",
-      "location": "Mumbai",
+      "id": "8e31",
+      "roomName": "room102",
+      "capacity": "15",
+      "location": "Pune",
+      "date": "2024-11-11",
+      "isAvailable": true
+    },
+    {
+      "id": "87e1",
+      "roomName": "room103",
+      "capacity": "20",
+      "location": "Delhi",
+      "date": "2024-11-11",
       "isAvailable": true
     }
   ],
   "bookings": [
     {
-      "id": "ecaa",
+      "id": "71c3",
       "userId": "2",
-      "roomId": "104",
-      "roomName": "room104",
-      "capacity": "13",
+      "roomId": "ca1c",
+      "roomName": "room101",
+      "capacity": "14",
       "location": "Mumbai",
       "bookedBy": "Malong",
-      "bookingDate": "2024-11-10",
-      "startTime": "07:45",
-      "endTime": "08:45"
-    },
-    {
-      "id": "bcf5",
-      "userId": 6,
-      "roomId": "101",
-      "roomName": "room101",
-      "capacity": "10",
-      "location": "mumbai",
-      "bookedBy": "ganesh",
       "bookingDate": "2024-11-11",
-      "startTime": "11:11",
-      "endTime": "12:11"
+      "startTime": "15:13",
+      "endTime": "16:13"
     },
     {
-      "id": "6f2d",
-      "userId": 6,
-      "roomId": "101",
+      "id": "5dfb",
+      "userId": "2",
+      "roomId": "ca1c",
       "roomName": "room101",
-      "capacity": "10",
-      "location": "mumbai",
-      "bookedBy": "ganesh",
-      "bookingDate": "2024-11-01",
-      "startTime": "11:11",
-      "endTime": "12:11"
+      "capacity": "14",
+      "location": "Mumbai",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "16:23",
+      "endTime": "17:23"
+    },
+    {
+      "id": "cf42",
+      "userId": "2",
+      "roomId": "ca1c",
+      "roomName": "room101",
+      "capacity": "14",
+      "location": "Mumbai",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "19:26",
+      "endTime": "20:26"
+    },
+    {
+      "id": "a883",
+      "userId": "2",
+      "roomId": "ca1c",
+      "roomName": "room101",
+      "capacity": "14",
+      "location": "Mumbai",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "09:33",
+      "endTime": "10:33"
+    },
+    {
+      "id": "274f",
+      "userId": "2",
+      "roomId": "8e31",
+      "roomName": "room102",
+      "capacity": "15",
+      "location": "Pune",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "15:41",
+      "endTime": "16:42"
+    },
+    {
+      "id": "4cca",
+      "userId": "2",
+      "roomId": "8e31",
+      "roomName": "room102",
+      "capacity": "15",
+      "location": "Pune",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "08:53",
+      "endTime": "09:53"
+    },
+    {
+      "id": "54ab",
+      "userId": "2",
+      "roomId": "8e31",
+      "roomName": "room102",
+      "capacity": "15",
+      "location": "Pune",
+      "bookedBy": "Malong",
+      "bookingDate": "2024-11-11",
+      "startTime": "10:58",
+      "endTime": "11:58"
+    },
+    {
+      "id": "42bf",
+      "userId": 5,
+      "roomId": "87e1",
+      "roomName": "room103",
+      "capacity": "20",
+      "location": "Delhi",
+      "bookedBy": "virat",
+      "bookingDate": "2024-11-11",
+      "startTime": "17:42",
+      "endTime": "18:42"
+    },
+    {
+      "id": "2373",
+      "userId": 5,
+      "roomId": "87e1",
+      "roomName": "room103",
+      "capacity": "20",
+      "location": "Delhi",
+      "bookedBy": "virat",
+      "bookingDate": "2024-11-11",
+      "startTime": "07:49",
+      "endTime": "09:49"
+    },
+    {
+      "id": "fac8",
+      "userId": 5,
+      "roomId": "ca1c",
+      "roomName": "room101",
+      "capacity": "14",
+      "location": "Mumbai",
+      "bookedBy": "virat",
+      "bookingDate": "2024-11-14",
+      "startTime": "16:51",
+      "endTime": "17:51"
+    },
+    {
+      "id": "397a",
+      "userId": 5,
+      "roomId": "ca1c",
+      "roomName": "room101",
+      "capacity": "14",
+      "location": "Mumbai",
+      "bookedBy": "virat",
+      "bookingDate": "2024-11-11",
+      "startTime": "13:08",
+      "endTime": "14:08"
     }
   ]
 }
